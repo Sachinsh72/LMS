@@ -12,7 +12,7 @@ const userSchema = new Schema({
         trim: true
     },
     email: {
-        type: true,
+        type: 'String',
         required: [true, 'Email is required'],
         lowercase: true,
         trim: true,
@@ -39,13 +39,13 @@ const userSchema = new Schema({
         default: 'USER'
     },
     forgotPasswordToken: String,
-    forgotPasswordExpiry: Date,
+    forgotPasswordExpiry: Date
 },{
     timestamps: true
 });
 
 //password encrypt
-userSchema.pre = model('save', async function(next){
+userSchema.pre('save', async function(next){
     if(!this.isModified('password')){
         return next();
     }

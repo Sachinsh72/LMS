@@ -26,7 +26,7 @@ const register = async(req,res, next) =>{
         password,
         avatar: {
             publi_id: email,
-            secure_url : 'https://res.cloudinary'
+            secure_url : 'https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_'
         }
     });
 
@@ -52,9 +52,8 @@ const register = async(req,res, next) =>{
 
 };
 
-const login = async (req,res) =>{
+const login = async (req,res,next) =>{
     
-
     try {
         const {email,password} = req.body;
 
@@ -64,7 +63,7 @@ const login = async (req,res) =>{
         }
 
         const user = await userModel.findOne({
-            email,password
+            email
         })
         .select('+password');
     
@@ -93,14 +92,36 @@ const login = async (req,res) =>{
     }
 };
 
-// };
-
-const logout = (req,res) =>{
+const logout = (req,res,next) =>{
+    try {
+        res.cookie('token',null,{
+            secure: true,
+            maxAge: 0,
+            httpOnly: true
+        });
+        res.status(200).json({
+            success: true,
+            message: "User logged Out successfully"
+        })
+    } catch (e) {
+        return next(new AppError(e.message, 500));
+        
+    }
 
 };
 
-const getProfile = (req,res) =>{
-
+const getProfile = async (req,res,next) =>{
+    
+    try {
+        const userId = req.user.id;
+        const user = await userModel.findById(userId);
+        return res.status(200).json({
+            success : true,
+            data : user
+        });
+    } catch (e) {
+        return next(new AppError('Failed to fetch profile detail', 500));
+    }
 };
 
 export{
