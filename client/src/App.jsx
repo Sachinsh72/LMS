@@ -1,11 +1,14 @@
-
 import './App.css'
+
+import { Route, Routes } from 'react-router'
 
 function App() {
 
   return (
     <>
-      <h1 className=' bg-slate-500'>LMS</h1>
+      <Routes>
+        {/* <Route path='/' element={<Home/>}> </Route> */}
+      </Routes>
     </>
   )
 }
